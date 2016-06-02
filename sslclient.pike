@@ -1,15 +1,15 @@
 int main() 
 { 
    Stdio.FILE sock = Stdio.FILE(); 
-   if(!sock->connect("54.175.219.8", 443)){
+   if(!sock->connect("127.0.0.1", 443)){
 		write(strerror(sock->errno()));
 	}
 	SSL.context ctx = SSL.context();
-    SSL.sslfile ssl = SSL.sslfile(sock,ctx); 
-    ssl->write("GET /get HTTP/1.1"); 
-	while(1){
-		string str = ssl->read();
-		write("Response:\n%s\n",str);
-	}
+    SSL.sslfile ssl = SSL.sslfile(sock,ctx,1,1);
+    ssl->set_blocking();
+ //   ssl->connect();
+    ssl->write("GET / HTTP/1.1\r\n\r\n");
+	string str = ssl->read(1024,1);
+	write("Response:\n%s\n",str);
 	return -1;
 } 
